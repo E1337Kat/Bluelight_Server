@@ -24,12 +24,14 @@ import java.util.Date;
 public class Message {
     private String body;
     private String sender;
+    private String sessionID;
     private long encrypted_verificator;
     private Date recieved;
     
-    public Message(String b, String s, long v, Date r) {
+    public Message(String b, String s, String id, long v, Date r) {
         this.body = b;
         this.sender = s;
+        this.sessionID = id;
         this.encrypted_verificator = v;
         this.recieved = r;
     }
@@ -47,6 +49,10 @@ public class Message {
         return this.sender;
     }
     
+    public String getSessionID() {
+        return this.sessionID;
+    }
+    
     public long getVerification() {
         return this.encrypted_verificator;
     }
@@ -62,6 +68,10 @@ public class Message {
     
     public void setSender(String s) {
         this.sender = s;
+    }
+    
+    public void setSessionID(String id) {
+        this.sessionID = id;
     }
     
     public void setVerification(long v) {

@@ -27,7 +27,7 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-//import javax.websocket.server.ServerEndpoint;
+import javax.websocket.server.ServerEndpoint;
 import static java.lang.String.format;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,22 +38,20 @@ import javax.websocket.EndpointConfig;
  *
  * @author Elliekat
  */
-@javax.websocket.server.ServerEndpoint(value = "/chat", 
-                configurator = P2PConfigurator.class,
-                encoders = MessageEncoder.class, 
-                decoders = MessageDecoder.class)
-public class ServerEndpoint extends javax.websocket.Endpoint {
+//@ServerEndpoint(value = "/chat/{user}", 
+//                configurator = P2PConfigurator.class,
+//                encoders = MessageEncoder.class, 
+//                decoders = MessageDecoder.class)
+public class DispatchEndpoint extends javax.websocket.Endpoint {
 
     private Session session;
     static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
-    private Set<Conversation> convos = Collections.synchronizedSet(new HashSet<Conversation>());
 
     @Override
     public void onOpen(Session sn, EndpointConfig ec) {
         this.session = sn;
-        System.out.println(format("%s has initiated a request.", sn.getId()));
+        System.out.println(format("%s joined the chat room.", sn.getId()));
         peers.add(sn);
-        convos.add(new Conversation(sn.getId()));
     }
 
     public void onMessage(Message message, Session session) throws IOException, EncodeException {
@@ -67,7 +65,12 @@ public class ServerEndpoint extends javax.websocket.Endpoint {
 
         System.out.println(format("[%s:%s] %s", session.getId(), message.getReceived(), message.getBody()));
 
-        
+        //broadcast the message
+        for (Session peer : peers) {
+            if (!session.getId().equals(peer.getId())) { // do not resend the message to its sender
+                peer.getBasicRemote().sendObject(message);
+            }
+        }
     }
 
     @Override
@@ -83,7 +86,7 @@ public class ServerEndpoint extends javax.websocket.Endpoint {
             try {
                 peer.getBasicRemote().sendObject(message);
             } catch (IOException | EncodeException ex) {
-                Logger.getLogger(ServerEndpoint.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DispatchEndpoint.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
