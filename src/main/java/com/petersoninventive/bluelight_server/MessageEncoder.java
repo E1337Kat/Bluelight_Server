@@ -31,7 +31,8 @@ public class MessageEncoder implements Encoder.Text<Message> {
         return Json.createObjectBuilder()
                     .add("body", message.getBody())
                     .add("sender", message.getSender())
-                    .add("session_id", message.getSessionID())
+                    .add("convo_id", message.getConvoID())
+                    .add("user_id", message.getUserID())
                     .add("verification", message.getVerification())
                     .add("received", "")
                     .build().toString();

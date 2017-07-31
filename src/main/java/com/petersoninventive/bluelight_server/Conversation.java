@@ -6,6 +6,7 @@
 package com.petersoninventive.bluelight_server;
 
 import java.util.Stack;
+import javax.websocket.Session;
 
 /**
  *
@@ -13,14 +14,16 @@ import java.util.Stack;
  */
 public class Conversation {
     private Stack<Message> messages;
-    private String sessionID;
+    private long convoID;
+    private Session session;
     
-    public Conversation(String sessionID) {
-        this.sessionID = sessionID;
+    public Conversation(long convoID, Session session) {
+        this.convoID = convoID;
+        this.session = session;
     }
     
     public void addMessage(Message message) {
-        messages.push(message);
+        this.messages.push(message);
     }
     
     public Stack<Message> getMessages() {
@@ -31,8 +34,12 @@ public class Conversation {
         return this.messages.peek().getBody();
     }
     
-    public String getSessionID() {
+    public long getConvoID() {
     
-        return this.messages.peek().getSessionID();
+        return this.convoID;
+    }
+    
+    public Session getSession() {
+        return this.session;
     }
 }

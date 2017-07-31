@@ -35,8 +35,9 @@ public class MessageDecoder implements Decoder.Text<Message> {
         JsonObject jsonObject = Json.createReader(new StringReader(textMessage)).readObject();
         message.setBody(jsonObject.getString("body"));
         message.setSender(jsonObject.getString("sender"));
-        message.setSessionID(jsonObject.getString("session_id"));
-        message.setVerification(jsonObject.getInt("verificaton"));
+        message.setConvoID(jsonObject.getInt("convo_id"));
+        message.setUserID(jsonObject.getInt("user_id"));
+        message.setVerification(jsonObject.getInt("verification"));
         message.setReceived(new Date());
         return message;
     }

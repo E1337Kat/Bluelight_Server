@@ -24,16 +24,17 @@ import java.util.Date;
 public class Message {
     private String body;
     private String sender;
-    private String sessionID;
+    private long convoID;
+    private long userID;
     private long encrypted_verificator;
     private Date recieved;
     
-    public Message(String b, String s, String id, long v, Date r) {
-        this.body = b;
-        this.sender = s;
-        this.sessionID = id;
-        this.encrypted_verificator = v;
-        this.recieved = r;
+    public Message(long convoID, long userID) {
+        this.body = "Conversation ID";
+        this.sender = "Server";
+        this.convoID = convoID;
+        this.userID = userID;
+        this.encrypted_verificator = 1;
     }
     
     public Message() {
@@ -49,8 +50,12 @@ public class Message {
         return this.sender;
     }
     
-    public String getSessionID() {
-        return this.sessionID;
+    public long getUserID() {
+        return this.userID;
+    }
+    
+    public long getConvoID() {
+        return this.convoID;
     }
     
     public long getVerification() {
@@ -70,8 +75,12 @@ public class Message {
         this.sender = s;
     }
     
-    public void setSessionID(String id) {
-        this.sessionID = id;
+    public void setUserID(long id) {
+        this.userID = id;
+    }
+    
+    public void setConvoID(long id) {
+        this.convoID = id;
     }
     
     public void setVerification(long v) {
